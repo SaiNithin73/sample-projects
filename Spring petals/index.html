@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>桜 For You 🌸</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Pinyon+Script&family=Raleway:wght@200;300&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cur">🌸</div>
+
+<!-- Main canvas -->
+<canvas id="c"></canvas>
+
+<!-- UI overlay -->
+<div id="ui">
+  <div id="tc">
+    <div class="krow">桜 · 春 · 花</div>
+    <h1>Cherry <em>Blossoms</em></h1>
+    <div class="sub">A moment just for you</div>
+    <div class="hint">✦ click anywhere to awaken the petals ✦</div>
+  </div>
+  <div id="ribbon">like petals in the wind, I keep drifting to you</div>
+  <div id="ctr"><strong id="cnt">0</strong><br>petals fallen</div>
+  <div id="wbar">🌬 wind blowing →</div>
+  <div id="season">桜 花 春 風</div>
+</div>
+
+<!-- Love note modal -->
+<div id="ln">
+  <div id="lni">
+    <h2>For You</h2>
+    <p>Like cherry blossoms that bloom only briefly,<br>some moments are too beautiful not to share.</p>
+    <p>This one is yours. 🌸</p>
+    <div class="sig">— always</div>
+    <button id="lnc">close &amp; enjoy</button>
+  </div>
+</div>
+
+<!-- Controls -->
+<div id="controls">
+  <button class="btn bs" id="bcl">✕ Clear</button>
+  <button class="btn br" id="bwn">🌬 Wind</button>
+  <button class="btn br" id="bsh">🌸 Full Bloom</button>
+  <button class="btn bx" id="bng">🌙 Night</button>
+  <button class="btn bx" id="bnt">💌 Love Note</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

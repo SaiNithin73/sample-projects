@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>桜 For You 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Raleway:wght@200;300&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;user-select:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#1a0a12;cursor:none}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+#cur{position:fixed;pointer-events:none;z-index:9999;font-size:18px;transform:translate(-50%,-50%);filter:drop-shadow(0 0 6px rgba(255,160,180,.9));will-change:left,top}
+#controls{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:300;pointer-events:auto;flex-wrap:wrap;justify-content:center}
+.btn{font-family:'Raleway',sans-serif;font-weight:300;font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:8px 16px;border:none;cursor:pointer;border-radius:24px;transition:background .2s;backdrop-filter:blur(8px)}
+.bs{background:rgba(255,255,255,.48);color:rgba(150,50,90,.74);border:1px solid rgba(210,120,160,.18)}
+.bs:hover{background:rgba(255,215,228,.72)}
+.br{background:rgba(235,108,148,.13);color:rgba(168,40,80,.88);border:1px solid rgba(215,90,138,.24)}
+.br:hover{background:rgba(235,108,148,.26)}
+.br.on{background:rgba(98,152,255,.13);color:rgba(65,105,215,.9);border-color:rgba(115,152,255,.34);animation:bth 1.2s ease-in-out infinite}
+.bx{background:rgba(235,168,110,.14);color:rgba(145,60,20,.78);border:1px solid rgba(215,148,90,.24)}
+.bx:hover{background:rgba(235,168,110,.3)}
+@keyframes bth{0%,100%{opacity:1}50%{opacity:.36}}
+#ctr{position:fixed;top:14px;right:16px;font-family:'Raleway',sans-serif;font-weight:200;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,200,220,.5);opacity:0;transition:opacity .6s;text-align:right;z-index:200}
+#ctr.show{opacity:1}
+#ctr strong{font-size:15px;color:#ffb0c8;font-weight:300;display:block}
+#ribbon{position:fixed;bottom:58px;left:50%;transform:translateX(-50%);font-family:'Pinyon Script',cursive;font-size:clamp(16px,2.4vw,24px);color:rgba(255,200,230,.45);white-space:nowrap;opacity:0;transition:opacity 1.2s;text-shadow:0 2px 10px rgba(255,150,190,.3);z-index:200;pointer-events:none}
+#ribbon.show{opacity:1}
+#wbar{position:fixed;top:14px;left:16px;font-family:'Raleway',sans-serif;font-weight:200;font-size:10px;letter-spacing:.13em;color:rgba(255,200,220,.45);opacity:0;transition:opacity .4s;z-index:200}
+#wbar.show{opacity:1}
+.fh{position:fixed;pointer-events:none;z-index:50;font-size:12px;animation:fhu 2.4s ease-out forwards}
+@keyframes fhu{0%{opacity:0;transform:translateY(0) scale(.35)}18%{opacity:.68;transform:translateY(-14px) scale(1)}78%{opacity:.28;transform:translateY(-65px)}100%{opacity:0;transform:translateY(-100px) scale(.45)}}
+#ln{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .65s}
+#ln.show{opacity:1;pointer-events:auto}
+#lni{background:rgba(40,10,20,.88);border:1px solid rgba(255,150,180,.2);border-radius:6px;padding:clamp(18px,3.5vw,42px) clamp(22px,4.5vw,56px);text-align:center;box-shadow:0 14px 44px rgba(0,0,0,.5);max-width:min(440px,90vw);backdrop-filter:blur(16px)}
+#lni h2{font-family:'Pinyon Script',cursive;font-size:clamp(26px,5vw,46px);color:#ffb0c8;margin-bottom:10px}
+#lni p{font-family:'Raleway',sans-serif;font-weight:200;font-size:clamp(12px,1.7vw,14px);color:rgba(255,210,225,.72);line-height:1.82;margin-bottom:5px;letter-spacing:.08em}
+.sig{font-family:'Pinyon Script',cursive;font-size:clamp(17px,2.4vw,24px);color:#ff90b8;margin-top:10px}
+#lnc{margin-top:14px;font-family:'Raleway',sans-serif;font-weight:200;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,180,210,.54);border:1px solid rgba(255,150,185,.15);background:transparent;padding:6px 18px;border-radius:14px;cursor:pointer;transition:all .2s}
+#lnc:hover{background:rgba(255,150,185,.15);color:#ffb0c8}
+</style>
+</head>
+<body>
+<div id="cur">🌸</div>
+<canvas id="c"></canvas>
+<div id="ctr"><strong id="cnt">0</strong>petals fallen</div>
+<div id="ribbon">like petals in the wind, I keep drifting to you</div>
+<div id="wbar">🌬 wind blowing →</div>
+<div id="ln"><div id="lni">
+  <h2>For You</h2>
+  <p>Like cherry blossoms that bloom only briefly,<br>some moments are too beautiful not to share.</p>
+  <p>This one is yours. 🌸</p>
+  <div class="sig">— always</div>
+  <button id="lnc">close &amp; enjoy</button>
+</div></div>
+<div id="controls">
+  <button class="btn bs" id="bcl">✕ Clear</button>
+  <button class="btn br" id="bwn">🌬 Wind</button>
+  <button class="btn br" id="bsh">🌸 Full Bloom</button>
+  <button class="btn bx" id="bng">☀️ Day</button>
+  <button class="btn bx" id="bnt">💌 Love Note</button>
+</div>
+
+<script>
+// ── SETUP ──────────────────────────────────────────────────────
+var C=document.getElementById('c'), X=C.getContext('2d');
+var W,H,t=0,mx=0,my=0;
+var night=true, windOn=false, windStr=0, windTarget=0, gustInt=null;
+var petals=[], flies=[], total=0, noteShown=false, started=false;
+var trees=[];
+
+// ── RESIZE ─────────────────────────────────────────────────────
+function resize(){W=C.width=innerWidth;H=C.height=innerHeight;buildScene();}
+window.addEventListener('resize',resize);
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;},{passive:true});
+document.addEventListener('touchmove',function(e){mx=e.touches[0].clientX;my=e.touches[0].clientY;},{passive:true});
+
+// ── TREE STRUCTURE ─────────────────────────────────────────────
+// Each tree: thick trunk → forks into 3-5 major limbs → subdivides into branches → tips
+function makeTree(tx, ty, scale, seed){
+  Math.seedrng = seed; // deterministic look
+  var tr = Math.min(W,H) * 0.18 * scale;
+  var trunkH = tr * 1.1;
+  var trunkW = Math.max(18, tr * 0.18);
+  var segs = []; // {x1,y1,x2,y2,w,depth}
+  var tips = [];
+
+  // ── TRUNK: base widens with buttress roots ──
+  var baseY = ty;
+  var topY  = ty - trunkH;
+
+  // Main trunk
+  segs.push({x1:tx, y1:baseY, x2:tx, y2:topY, w:trunkW, depth:0});
+
+  // Buttress roots (flared base) — 4 root flanges
+  for(var r=0;r<4;r++){
+    var ra = (r/4)*Math.PI*2 + Math.PI*0.15;
+    var rx = tx + Math.cos(ra)*trunkW*1.4;
+    var ry = baseY - Math.sin(Math.abs(ra))*trunkH*0.12;
+    segs.push({x1:tx,y1:baseY-trunkH*0.08,x2:rx,y2:ry,w:trunkW*0.35,depth:0});
+  }
+
+  // ── FORK: trunk splits into 3 major limbs at 70% up ──
+  var forkY = ty - trunkH * 0.68;
+  var limbAngles = [-Math.PI/2 - 0.45, -Math.PI/2, -Math.PI/2 + 0.45];
+  var limbLens   = [tr*0.52, tr*0.48, tr*0.52];
+
+  limbAngles.forEach(function(ang, i){
+    var lw = trunkW * 0.58;
+    // Short connector from fork to limb start
+    var lx1 = tx + Math.cos(ang)*trunkW*0.3;
+    var ly1 = forkY + Math.sin(ang)*trunkW*0.3;
+    segs.push({x1:tx, y1:forkY, x2:lx1, y2:ly1, w:lw, depth:1});
+    // Main limb
+    recurse(segs, tips, lx1, ly1, ang, limbLens[i], lw*0.85, 2, 8, tr);
+    // Extra wide-spread sub-arm on outer limbs
+    if(i===0) recurse(segs,tips,lx1,ly1,ang-0.38,limbLens[i]*0.52,lw*0.5,2,8,tr);
+    if(i===2) recurse(segs,tips,lx1,ly1,ang+0.38,limbLens[i]*0.52,lw*0.5,2,8,tr);
+  });
+
+  // ── LOW ARMS: 2 heavy branches from mid-trunk spreading wide ──
+  var midY = ty - trunkH*0.42;
+  [[-Math.PI/2-0.72, tr*0.45], [-Math.PI/2+0.72, tr*0.45]].forEach(function(arm){
+    var aw = trunkW * 0.42;
+    recurse(segs, tips, tx, midY, arm[0], arm[1], aw, 3, 8, tr);
+  });
+
+  return {x:tx, y:ty, r:tr, trunkW:trunkW, forkY:forkY, segs:segs, tips:tips,
+          sh:0, sd:.88, oc:null, dirty:true};
+}
+
+function recurse(segs, tips, x, y, a, len, w, d, maxD, tr){
+  if(d>=maxD || len<3) return;
+  // Natural curve: slight random deviation per segment
+  var dev = (d < 4 ? 0.08 : 0.18) * (Math.random()-.5);
+  a += dev;
+  var ex = x + Math.cos(a)*len, ey = y + Math.sin(a)*len;
+  segs.push({x1:x,y1:y,x2:ex,y2:ey,w:w,depth:d});
+  if(d >= maxD-2) tips.push({x:ex, y:ey});
+  var sp = 0.28 + d*0.038;
+  var nw = w * 0.68;
+  recurse(segs,tips,ex,ey,a-sp,len*0.64,nw,d+1,maxD,tr);
+  recurse(segs,tips,ex,ey,a+sp,len*0.62,nw,d+1,maxD,tr);
+  if(d<5) recurse(segs,tips,ex,ey,a+(Math.random()-.5)*0.15,len*0.50,nw*0.75,d+2,maxD,tr);
+}
+
+// ── BAKE TREE TO OFFSCREEN CANVAS ─────────────────────────────
+function bakeTree(tree){
+  var pad=50;
+  var minX=tree.x,maxX=tree.x,minY=tree.y;
+  tree.segs.forEach(function(s){
+    minX=Math.min(minX,s.x1,s.x2); maxX=Math.max(maxX,s.x1,s.x2);
+    minY=Math.min(minY,s.y1,s.y2);
+  });
+  minX -= tree.r*0.4; maxX += tree.r*0.4; minY -= tree.r*0.3;
+
+  var cw = maxX-minX+pad*2, ch = tree.y-minY+pad*2+tree.r*0.2;
+  cw=Math.max(cw,tree.r*3.4); ch=Math.max(ch,tree.r*2.8);
+
+  tree.oc = document.createElement('canvas');
+  tree.oc.width=cw|0; tree.oc.height=ch|0;
+  var ox=tree.oc.getContext('2d');
+
+  // lx,ly = where tree.x,tree.y maps in offscreen canvas
+  var lx = tree.x - minX + pad;
+  var ly = ch - pad;
+  tree.lx=lx; tree.ly=ly; tree.cw=cw|0; tree.ch=ch|0;
+
+  function px(v){return v - tree.x + lx;}
+  function py(v){return v - tree.y + ly;}
+
+  // Sort: thick first (background), thin last (foreground)
+  var sorted = tree.segs.slice().sort(function(a,b){return b.w-a.w;});
+
+  // ── DRAW BRANCHES ──
+  sorted.forEach(function(s){
+    var t2 = s.depth/8;
+    // Rich dark-brown bark, lighter highlight on upper side
+    if(s.w > 10){
+      var gr = ox.createLinearGradient(px(s.x1)-s.w*.5,0,px(s.x1)+s.w*.5,0);
+      gr.addColorStop(0,   'rgb(22,9,4)');
+      gr.addColorStop(0.22,'rgb(52,24,11)');
+      gr.addColorStop(0.5, 'rgb(74,36,16)');
+      gr.addColorStop(0.72,'rgb(58,28,12)');
+      gr.addColorStop(1,   'rgb(18,7,3)');
+      ox.strokeStyle=gr;
+    } else if(s.w>4){
+      ox.strokeStyle='rgb('+(42+t2*38|0)+','+(20+t2*22|0)+','+(9+t2*12|0)+')';
+    } else {
+      ox.strokeStyle='rgb('+(55+t2*30|0)+','+(28+t2*18|0)+','+(12+t2*10|0)+')';
+    }
+    ox.lineWidth=s.w; ox.lineCap='round'; ox.lineJoin='round';
+    ox.beginPath(); ox.moveTo(px(s.x1),py(s.y1)); ox.lineTo(px(s.x2),py(s.y2)); ox.stroke();
+
+    // Bark texture lines on thick segments
+    if(s.w>12 && s.depth<3){
+      ox.strokeStyle='rgba(0,0,0,.18)'; ox.lineWidth=1.2;
+      for(var lt=0;lt<3;lt++){
+        var frac=0.25+lt*0.25;
+        var mx2=px(s.x1)+(px(s.x2)-px(s.x1))*frac + (Math.random()-.5)*s.w*0.3;
+        var my2=py(s.y1)+(py(s.y2)-py(s.y1))*frac;
+        ox.beginPath(); ox.moveTo(mx2,my2); ox.lineTo(mx2+(Math.random()-.5)*s.w*0.6,my2+s.w*0.4); ox.stroke();
+      }
+    }
+  });
+
+  // ── DRAW BLOSSOM PUFFS ── multiple overlapping radial blobs per tip
+  tree.segs.forEach(function(s){
+    if(s.depth < 3) return;
+    var puffR = tree.r * (
+      s.depth>=7 ? .135 : s.depth>=6 ? .12 : s.depth>=5 ? .10 :
+      s.depth>=4 ? .082 : .062
+    );
+    var ex=px(s.x2), ey=py(s.y2);
+    var nPuffs = s.depth>=6 ? 4 : 3;
+    for(var p=0;p<nPuffs;p++){
+      var offX=(Math.random()-.5)*puffR*1.1, offY=(Math.random()-.5)*puffR*.8 - puffR*.12;
+      var gr=ox.createRadialGradient(ex+offX,ey+offY,0,ex+offX,ey+offY,puffR);
+      if(night){
+        gr.addColorStop(0,  'rgba(255,190,220,.82)');
+        gr.addColorStop(.38,'rgba(255,165,205,.52)');
+        gr.addColorStop(.68,'rgba(220,130,175,.22)');
+        gr.addColorStop(1,  'transparent');
+      } else {
+        gr.addColorStop(0,  'rgba(255,210,230,.90)');
+        gr.addColorStop(.35,'rgba(255,185,210,.62)');
+        gr.addColorStop(.65,'rgba(240,160,195,.25)');
+        gr.addColorStop(1,  'transparent');
+      }
+      ox.fillStyle=gr;
+      ox.beginPath(); ox.arc(ex+offX,ey+offY,puffR,0,Math.PI*2); ox.fill();
+    }
+  });
+
+  // ── DRAW INDIVIDUAL TINY BLOSSOMS on outermost tips ──
+  tree.tips.forEach(function(tip){
+    var ex=px(tip.x), ey=py(tip.y);
+    for(var f=0;f<5;f++){
+      var fx=ex+(Math.random()-.5)*tree.r*.15, fy=ey+(Math.random()-.5)*tree.r*.15;
+      ox.fillStyle=night?'rgba(255,200,225,.6)':'rgba(255,225,235,.7)';
+      ox.beginPath(); ox.arc(fx,fy,1.5+Math.random()*2,0,Math.PI*2); ox.fill();
+    }
+  });
+
+  tree.dirty=false;
+}
+
+// ── DRAW SCENE BG ──────────────────────────────────────────────
+function drawBg(){
+  // Sky gradient
+  var sky=X.createLinearGradient(0,0,0,H);
+  if(night){
+    sky.addColorStop(0,'#0d0414'); sky.addColorStop(.4,'#1e082a');
+    sky.addColorStop(.75,'#2a0f22'); sky.addColorStop(1,'#1a0a16');
+  } else {
+    sky.addColorStop(0,'#ffe0f0'); sky.addColorStop(.3,'#fcd0e8');
+    sky.addColorStop(.65,'#f8d8f0'); sky.addColorStop(1,'#f0d0e8');
+  }
+  X.fillStyle=sky; X.fillRect(0,0,W,H);
+
+  if(night){
+    // Moon
+    var moonX=W*.72, moonY=H*.1;
+    var mg=X.createRadialGradient(moonX,moonY,0,moonX,moonY,H*.15);
+    mg.addColorStop(0,'rgba(255,245,215,.72)'); mg.addColorStop(.15,'rgba(255,235,200,.25)');
+    mg.addColorStop(.5,'rgba(200,175,255,.06)'); mg.addColorStop(1,'transparent');
+    X.fillStyle=mg; X.beginPath(); X.arc(moonX,moonY,H*.15,0,Math.PI*2); X.fill();
+    X.fillStyle='rgba(255,250,225,.92)'; X.beginPath(); X.arc(moonX,moonY,H*.038,0,Math.PI*2); X.fill();
+    // Stars
+    var stars=[[.06,.04],[.14,.07],[.22,.03],[.32,.08],[.42,.05],[.52,.02],[.58,.09],
+               [.64,.04],[.78,.06],[.84,.12],[.92,.04],[.96,.08],[.10,.14],[.38,.13],
+               [.86,.03],[.48,.11],[.28,.06],[.70,.03],[.18,.18],[.44,.15]];
+    stars.forEach(function(s){
+      var sz=0.6+Math.random()*.9;
+      X.fillStyle='rgba(255,245,255,'+(0.4+Math.random()*.5)+')';
+      X.beginPath(); X.arc(s[0]*W,s[1]*H,sz,0,Math.PI*2); X.fill();
+      // Twinkle cross
+      if(Math.random()<.3){
+        X.strokeStyle='rgba(255,245,255,.3)'; X.lineWidth=.6;
+        X.beginPath(); X.moveTo(s[0]*W-sz*3,s[1]*H); X.lineTo(s[0]*W+sz*3,s[1]*H); X.stroke();
+        X.beginPath(); X.moveTo(s[0]*W,s[1]*H-sz*3); X.lineTo(s[0]*W,s[1]*H+sz*3); X.stroke();
+      }
+    });
+    // Distant mountains
+    drawMtn(X,'rgba(40,12,48,.65)',[.78,.62,.54,.66,.60,.52,.64,.70,.78],H*.82);
+    drawMtn(X,'rgba(55,18,58,.75)',[.84,.72,.76,.70,.74,.68,.72,.78,.84],H*.88);
+  } else {
+    // Sun
+    var sg=X.createRadialGradient(W*.2,H*.08,0,W*.2,H*.08,H*.22);
+    sg.addColorStop(0,'rgba(255,220,190,.55)'); sg.addColorStop(.4,'rgba(255,200,215,.16)'); sg.addColorStop(1,'transparent');
+    X.fillStyle=sg; X.beginPath(); X.arc(W*.2,H*.08,H*.22,0,Math.PI*2); X.fill();
+    drawMtn(X,'rgba(210,160,195,.32)',[.78,.62,.54,.66,.60,.52,.64,.70,.78],H*.82);
+    drawMtn(X,'rgba(225,185,210,.22)',[.84,.72,.76,.70,.74,.68,.72,.78,.84],H*.88);
+  }
+
+  // ── GROUND / LANDSCAPE ──
+  var groundY = H * 0.78;
+
+  // Rolling hills base
+  X.fillStyle = night ? 'rgba(18,38,14,.95)' : 'rgba(80,120,50,.85)';
+  X.beginPath(); X.moveTo(0, groundY+H*.04);
+  X.bezierCurveTo(W*.15,groundY-H*.06, W*.35,groundY+H*.02, W*.5,groundY-H*.04);
+  X.bezierCurveTo(W*.65,groundY-H*.10, W*.82,groundY+H*.02, W,groundY+H*.04);
+  X.lineTo(W,H); X.lineTo(0,H); X.closePath(); X.fill();
+
+  // Grass layer - rich green
+  var grassG=X.createLinearGradient(0,groundY,0,H);
+  if(night){
+    grassG.addColorStop(0,'#0e2810'); grassG.addColorStop(.3,'#0a1e0c'); grassG.addColorStop(1,'#060e08');
+  } else {
+    grassG.addColorStop(0,'#5a9e38'); grassG.addColorStop(.3,'#4a8430'); grassG.addColorStop(1,'#306020');
+  }
+  X.fillStyle=grassG; X.fillRect(0,groundY,W,H-groundY);
+
+  // Grass texture — fine blades
+  X.strokeStyle=night?'rgba(30,80,20,.35)':'rgba(100,180,60,.40)';
+  X.lineWidth=1;
+  for(var g=0;g<120;g++){
+    var gx=Math.random()*W, gy=groundY+Math.random()*(H-groundY)*0.4;
+    var gh=4+Math.random()*10;
+    X.beginPath(); X.moveTo(gx,gy+gh); X.quadraticCurveTo(gx+(Math.random()-.5)*6,gy+gh*.4,gx+(Math.random()-.5)*4,gy); X.stroke();
+  }
+
+  // Path / clearing under middle tree
+  var pathCX = W*.5;
+  var pathEllG = X.createRadialGradient(pathCX, groundY+20, 5, pathCX, groundY+20, W*.18);
+  if(night){
+    pathEllG.addColorStop(0,'rgba(30,55,22,.9)'); pathEllG.addColorStop(1,'transparent');
+  } else {
+    pathEllG.addColorStop(0,'rgba(110,170,70,.8)'); pathEllG.addColorStop(1,'transparent');
+  }
+  X.fillStyle=pathEllG;
+  X.beginPath(); X.ellipse(pathCX,groundY+20,W*.20,H*.06,0,0,Math.PI*2); X.fill();
+
+  // Stone path leading to tree
+  for(var s=0;s<8;s++){
+    var sy = groundY + H*0.06 + s*H*0.04;
+    var sx = pathCX + (Math.random()-.5)*W*0.06;
+    var sr = 8+Math.random()*14;
+    X.fillStyle=night?'rgba(60,80,55,.6)':'rgba(160,180,130,.55)';
+    X.beginPath(); X.ellipse(sx,sy,sr,sr*.45,Math.random()*.5,0,Math.PI*2); X.fill();
+  }
+
+  // Ground petal scatter
+  for(var gp=0;gp<40;gp++){
+    var gpx=Math.random()*W, gpy=groundY+Math.random()*(H-groundY)*0.5;
+    X.fillStyle=night?'rgba(255,185,210,.3)':'rgba(255,210,230,.5)';
+    X.beginPath(); X.arc(gpx,gpy,1.5+Math.random()*2.5,0,Math.PI*2); X.fill();
+  }
+
+  // ── COUPLES — drawn big and clearly visible under middle tree ──
+  drawCouple1(W*.40, groundY + H*0.01);
+  drawCouple2(W*.58, groundY + H*0.01);
+
+  // Foreground grass tuft overlay
+  X.strokeStyle=night?'rgba(20,60,15,.6)':'rgba(80,160,40,.5)';
+  X.lineWidth=1.2;
+  for(var ft=0;ft<60;ft++){
+    var fx2=Math.random()*W, fy2=H-Math.random()*H*.08;
+    var fh=6+Math.random()*14;
+    X.beginPath(); X.moveTo(fx2,fy2); X.quadraticCurveTo(fx2+(Math.random()-.5)*8,fy2-fh*.5,fx2+(Math.random()-.5)*5,fy2-fh); X.stroke();
+  }
+}
+
+function drawMtn(ctx,color,heights,base){
+  var pts=[0,.14,.27,.41,.54,.67,.79,.91,1];
+  ctx.fillStyle=color; ctx.beginPath(); ctx.moveTo(0,base);
+  pts.forEach(function(px,i){ctx.lineTo(px*W,H*heights[i]);});
+  ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath(); ctx.fill();
+}
+
+// ── COUPLE DRAWINGS ────────────────────────────────────────────
+function drawCouple1(cx, cy){
+  // Couple 1: sitting together, girl leaning on guy's shoulder
+  // sc = base unit — made much larger so they're clearly visible
+  var sc = Math.min(W,H) * 0.11;
+  var skin   = '#d4956e';
+  var skinD  = '#b87850';
+  var hair1  = '#1c0c06';   // guy: dark black-brown
+  var hair2  = '#2a0e1c';   // girl: dark with reddish tint
+  var dress  = night ? '#8b3a6a' : '#c45a90';   // pink-purple dress
+  var shirt  = night ? '#2a4870' : '#3a6aac';   // blue shirt
+  var pants  = night ? '#1a2035' : '#2a3555';
+  var shoes  = '#1a1008';
+
+  X.save(); X.translate(cx, cy);
+
+  // ── GROUND SHADOW ──
+  X.fillStyle = 'rgba(0,0,0,.18)';
+  X.beginPath(); X.ellipse(sc*.05, sc*.78, sc*.62, sc*.10, 0, 0, Math.PI*2); X.fill();
+
+  // ══ GUY (right figure) ══
+  // Legs / pants — crossed, sitting
+  X.fillStyle = pants;
+  // Left leg going forward
+  X.beginPath(); X.moveTo(sc*.18, sc*.55);
+  X.bezierCurveTo(sc*.12,sc*.65, sc*.06,sc*.72, sc*.02,sc*.78); X.lineWidth=sc*.14;
+  X.strokeStyle=pants; X.lineCap='round'; X.stroke();
+  X.beginPath(); X.moveTo(sc*.18,sc*.55);
+  X.bezierCurveTo(sc*.24,sc*.65, sc*.32,sc*.72, sc*.36,sc*.76);
+  X.lineWidth=sc*.14; X.strokeStyle=pants; X.stroke();
+  // Filled lap area
+  X.fillStyle=pants;
+  X.beginPath(); X.moveTo(sc*.04,sc*.55); X.lineTo(sc*.32,sc*.55); X.lineTo(sc*.36,sc*.76); X.lineTo(sc*.00,sc*.78); X.closePath(); X.fill();
+  // Shoes
+  X.fillStyle=shoes;
+  X.beginPath(); X.ellipse(sc*.38,sc*.78,sc*.10,sc*.04,0.3,0,Math.PI*2); X.fill();
+  X.beginPath(); X.ellipse(sc*.00,sc*.80,sc*.09,sc*.038,-.2,0,Math.PI*2); X.fill();
+
+  // Torso / shirt
+  X.fillStyle=shirt;
+  X.beginPath();
+  X.moveTo(sc*.02, sc*.58);
+  X.bezierCurveTo(sc*.00,sc*.38, sc*.06,sc*.22, sc*.18,sc*.18);
+  X.bezierCurveTo(sc*.30,sc*.14, sc*.38,sc*.28, sc*.36,sc*.50);
+  X.bezierCurveTo(sc*.34,sc*.56, sc*.22,sc*.60, sc*.02,sc*.58);
+  X.fill();
+  // Shirt collar/detail
+  X.fillStyle = night?'rgba(80,130,200,.4)':'rgba(120,180,255,.35)';
+  X.beginPath(); X.moveTo(sc*.18,sc*.18); X.lineTo(sc*.14,sc*.28); X.lineTo(sc*.22,sc*.28); X.closePath(); X.fill();
+
+  // Right arm (around girl's shoulder)
+  X.strokeStyle=shirt; X.lineWidth=sc*.10; X.lineCap='round';
+  X.beginPath(); X.moveTo(sc*.04,sc*.32);
+  X.bezierCurveTo(-sc*.04,sc*.22, -sc*.16,sc*.18, -sc*.28,sc*.22); X.stroke();
+  // Left arm (resting on knee)
+  X.beginPath(); X.moveTo(sc*.34,sc*.32);
+  X.bezierCurveTo(sc*.40,sc*.40, sc*.40,sc*.50, sc*.36,sc*.56); X.stroke();
+  // Hand on knee
+  X.fillStyle=skin;
+  X.beginPath(); X.arc(sc*.36,sc*.57,sc*.048,0,Math.PI*2); X.fill();
+
+  // Neck
+  X.fillStyle=skin;
+  X.beginPath(); X.rect(sc*.14,sc*.15,sc*.08,sc*.08); X.fill();
+
+  // Head (guy)
+  X.fillStyle=skin;
+  X.beginPath(); X.arc(sc*.18, sc*.08, sc*.13, 0, Math.PI*2); X.fill();
+  // Ear
+  X.beginPath(); X.arc(sc*.31,sc*.08,sc*.028,0,Math.PI*2); X.fill();
+  X.beginPath(); X.arc(sc*.05,sc*.08,sc*.028,0,Math.PI*2); X.fill();
+  // Face details
+  X.fillStyle=skinD;
+  X.beginPath(); X.arc(sc*.18, sc*.12, sc*.09, 0, Math.PI); X.fill(); // chin shadow
+  // Eyes
+  X.fillStyle='#1a0808';
+  X.beginPath(); X.arc(sc*.13,sc*.06,sc*.018,0,Math.PI*2); X.fill();
+  X.beginPath(); X.arc(sc*.22,sc*.06,sc*.018,0,Math.PI*2); X.fill();
+  // Eye shine
+  X.fillStyle='white';
+  X.beginPath(); X.arc(sc*.135,sc*.055,sc*.007,0,Math.PI*2); X.fill();
+  X.beginPath(); X.arc(sc*.225,sc*.055,sc*.007,0,Math.PI*2); X.fill();
+  // Smile
+  X.strokeStyle='#8a4030'; X.lineWidth=sc*.015; X.lineCap='round';
+  X.beginPath(); X.arc(sc*.18,sc*.08,sc*.05,0.2,Math.PI-0.2); X.stroke();
+
+  // Hair (guy - short, dark, side-parted)
+  X.fillStyle=hair1;
+  X.beginPath(); X.arc(sc*.18,sc*.06,sc*.135,Math.PI*.7,Math.PI*2.0); X.fill();
+  X.beginPath(); X.moveTo(sc*.05,sc*.08); X.bezierCurveTo(sc*.04,sc*-.02,sc*.18,sc*-.06,sc*.31,sc*.02); X.lineWidth=sc*.05; X.strokeStyle=hair1; X.stroke();
+  // Hair side sweep
+  X.beginPath(); X.moveTo(sc*.05,sc*.06); X.bezierCurveTo(sc*.10,sc*-.04,sc*.24,sc*-.05,sc*.31,sc*.02);
+  X.lineWidth=sc*.04; X.strokeStyle=hair1; X.stroke();
+
+  // ══ GIRL (left figure, leaning on guy) ══
+  // Her legs (tucked to the side)
+  X.fillStyle=dress;
+  X.beginPath();
+  X.moveTo(-sc*.38, sc*.56);
+  X.bezierCurveTo(-sc*.42,sc*.64,-sc*.38,sc*.72,-sc*.28,sc*.76);
+  X.bezierCurveTo(-sc*.18,sc*.78,-sc*.10,sc*.76,sc*.00,sc*.78);
+  X.lineTo(sc*.00,sc*.58);
+  X.bezierCurveTo(-sc*.10,sc*.56,-sc*.22,sc*.54,-sc*.38,sc*.56);
+  X.fill();
+  // Dress skirt spread
+  X.fillStyle=night?'rgba(160,60,120,.55)':'rgba(220,90,160,.55)';
+  X.beginPath(); X.ellipse(-sc*.18,sc*.72,sc*.28,sc*.08,-.1,0,Math.PI*2); X.fill();
+
+  // Torso / dress body
+  X.fillStyle=dress;
+  X.beginPath();
+  X.moveTo(-sc*.36, sc*.56);
+  X.bezierCurveTo(-sc*.40,sc*.36,-sc*.34,sc*.18,-sc*.22,sc*.14);
+  X.bezierCurveTo(-sc*.10,sc*.10, sc*.00,sc*.22, sc*.00,sc*.50);
+  X.bezierCurveTo(-sc*.08,sc*.56,-sc*.24,sc*.58,-sc*.36,sc*.56);
+  X.fill();
+  // Dress neckline detail
+  X.fillStyle=night?'rgba(200,100,160,.5)':'rgba(255,150,200,.5)';
+  X.beginPath(); X.moveTo(-sc*.22,sc*.14); X.lineTo(-sc*.18,sc*.24); X.lineTo(-sc*.26,sc*.24); X.closePath(); X.fill();
+
+  // Girl arm draped over lap
+  X.strokeStyle=skin; X.lineWidth=sc*.08; X.lineCap='round';
+  X.beginPath(); X.moveTo(-sc*.34,sc*.34);
+  X.bezierCurveTo(-sc*.40,sc*.44,-sc*.36,sc*.55,-sc*.28,sc*.60); X.stroke();
+  X.fillStyle=skin;
+  X.beginPath(); X.arc(-sc*.27,sc*.61,sc*.042,0,Math.PI*2); X.fill();
+
+  // Neck (girl)
+  X.fillStyle=skin;
+  X.beginPath(); X.rect(-sc*.26,sc*.11,sc*.07,sc*.07); X.fill();
+
+  // Head (girl - tilted toward guy, resting on his shoulder)
+  X.fillStyle=skin;
+  X.beginPath(); X.arc(-sc*.22, sc*.04, sc*.12, 0, Math.PI*2); X.fill();
+  // Ear
+  X.beginPath(); X.arc(-sc*.10,sc*.04,sc*.025,0,Math.PI*2); X.fill();
+  // Chin shadow
+  X.fillStyle=skinD;
+  X.beginPath(); X.arc(-sc*.22,sc*.08,sc*.08,0,Math.PI); X.fill();
+  // Eyes (closed — content/happy)
+  X.strokeStyle='#1a0808'; X.lineWidth=sc*.016; X.lineCap='round';
+  X.beginPath(); X.arc(-sc*.26,sc*.02,sc*.028,0.1,Math.PI-0.1); X.stroke(); // left eye closed
+  X.beginPath(); X.arc(-sc*.17,sc*.02,sc*.028,0.1,Math.PI-0.1); X.stroke(); // right eye closed
+  // Eyelashes
+  X.lineWidth=sc*.012;
+  X.beginPath(); X.moveTo(-sc*.29,sc*.005); X.lineTo(-sc*.30,-sc*.012); X.stroke();
+  X.beginPath(); X.moveTo(-sc*.14,sc*.005); X.lineTo(-sc*.13,-sc*.012); X.stroke();
+  // Smile (gentle)
+  X.strokeStyle='#8a4030'; X.lineWidth=sc*.014;
+  X.beginPath(); X.arc(-sc*.22,sc*.05,sc*.04,0.3,Math.PI-0.3); X.stroke();
+  // Rosy cheeks
+  X.fillStyle='rgba(240,130,130,.30)';
+  X.beginPath(); X.ellipse(-sc*.28,sc*.048,sc*.028,sc*.018,0,0,Math.PI*2); X.fill();
+  X.beginPath(); X.ellipse(-sc*.16,sc*.048,sc*.028,sc*.018,0,0,Math.PI*2); X.fill();
+
+  // Hair (girl - long, flowing dark hair with reddish sheen)
+  X.fillStyle=hair2;
+  // Top/back of head
+  X.beginPath(); X.arc(-sc*.22,sc*.03,sc*.128,Math.PI*.55,Math.PI*2.35); X.fill();
+  // Long hair falling down left side
+  X.beginPath();
+  X.moveTo(-sc*.32,-sc*.04);
+  X.bezierCurveTo(-sc*.44,sc*.08,-sc*.46,sc*.28,-sc*.40,sc*.50);
+  X.lineTo(-sc*.34,sc*.48);
+  X.bezierCurveTo(-sc*.38,sc*.26,-sc*.36,sc*.08,-sc*.26,-sc*.03);
+  X.closePath(); X.fill();
+  // Hair strand over shoulder
+  X.strokeStyle=hair2; X.lineWidth=sc*.06; X.lineCap='round';
+  X.beginPath(); X.moveTo(-sc*.14,-sc*.02);
+  X.bezierCurveTo(-sc*.08,sc*.10,-sc*.08,sc*.26,-sc*.10,sc*.42); X.stroke();
+  // Hair highlight
+  X.strokeStyle='rgba(80,30,50,.35)'; X.lineWidth=sc*.025;
+  X.beginPath(); X.moveTo(-sc*.30,-sc*.03);
+  X.bezierCurveTo(-sc*.40,sc*.10,-sc*.42,sc*.30,-sc*.37,sc*.48); X.stroke();
+
+  // ── Floating hearts above couple ──
+  X.font=(sc*.28)+'px serif';
+  X.fillStyle='rgba(255,120,160,.80)';
+  X.fillText('♡', -sc*.10, -sc*.22);
+  X.font=(sc*.18)+'px serif';
+  X.fillStyle='rgba(255,160,190,.55)';
+  X.fillText('♡', sc*.06, -sc*.34);
+  X.fillText('♡', -sc*.22, -sc*.30);
+
+  X.restore();
+}
+
+function drawCouple2(cx, cy){
+  // Couple 2: lying on a picnic blanket, girl resting head on guy's chest
+  var sc = Math.min(W,H) * 0.11;
+  var skin  = '#d4956e';
+  var skinD = '#b87850';
+  var hair1 = '#1c0c06';
+  var hair2 = '#2e1020';
+  var shirt2= night?'#2a5838':'#3a8050';  // green shirt
+  var pants2= night?'#1a2535':'#2a3848';
+  var dress2= night?'#7a2848':'#e05080';   // red dress
+  var blanket= night?'#5a1a30':'#e06888';  // pink blanket
+
+  X.save(); X.translate(cx, cy);
+
+  // ── BLANKET ──
+  // Main blanket
+  X.fillStyle=blanket;
+  X.beginPath();
+  X.moveTo(-sc*.75, sc*.50);
+  X.bezierCurveTo(-sc*.72,sc*.38, sc*.72,sc*.38, sc*.75,sc*.50);
+  X.bezierCurveTo(sc*.72,sc*.62, -sc*.72,sc*.62, -sc*.75,sc*.50);
+  X.closePath(); X.fill();
+  // Blanket pattern stripes
+  X.strokeStyle=night?'rgba(200,80,120,.25)':'rgba(255,140,160,.30)';
+  X.lineWidth=sc*.025;
+  for(var bl2=0;bl2<5;bl2++){
+    var bly=-sc*.46+bl2*sc*.22;
+    X.beginPath(); X.moveTo(-sc*.70,bly+sc*.50); X.lineTo(sc*.70,bly+sc*.50); X.stroke();
+  }
+  // Blanket border
+  X.strokeStyle=night?'rgba(220,100,140,.4)':'rgba(255,160,180,.5)';
+  X.lineWidth=sc*.018;
+  X.beginPath();
+  X.moveTo(-sc*.75,sc*.50);
+  X.bezierCurveTo(-sc*.72,sc*.38,sc*.72,sc*.38,sc*.75,sc*.50);
+  X.bezierCurveTo(sc*.72,sc*.62,-sc*.72,sc*.62,-sc*.75,sc*.50);
+  X.closePath(); X.stroke();
+
+  // ══ GUY (lying flat, on his back) ══
+  // Legs (straight, extending right)
+  X.fillStyle=pants2;
+  X.beginPath();
+  X.moveTo(sc*.08,sc*.38); X.lineTo(sc*.75,sc*.43); X.lineTo(sc*.75,sc*.55); X.lineTo(sc*.08,sc*.56); X.closePath(); X.fill();
+  // Feet / shoes
+  X.fillStyle='#1a1008';
+  X.beginPath(); X.ellipse(sc*.76,sc*.46,sc*.08,sc*.055,0.15,0,Math.PI*2); X.fill();
+  X.beginPath(); X.ellipse(sc*.76,sc*.53,sc*.08,sc*.050,0.10,0,Math.PI*2); X.fill();
+
+  // Torso (guy)
+  X.fillStyle=shirt2;
+  X.beginPath();
+  X.moveTo(-sc*.45,sc*.38);
+  X.bezierCurveTo(-sc*.46,sc*.30,-sc*.40,sc*.24,-sc*.28,sc*.24);
+  X.lineTo(sc*.10,sc*.26);
+  X.bezierCurveTo(sc*.12,sc*.32,sc*.12,sc*.48,sc*.10,sc*.54);
+  X.lineTo(-sc*.28,sc*.56);
+  X.bezierCurveTo(-sc*.40,sc*.56,-sc*.46,sc*.50,-sc*.45,sc*.38);
+  X.fill();
+  // Shirt pocket/detail
+  X.fillStyle=night?'rgba(50,120,80,.5)':'rgba(80,180,120,.4)';
+  X.beginPath(); X.rect(-sc*.22,sc*.30,sc*.10,sc*.08); X.fill();
+  // Shirt crease lines
+  X.strokeStyle=night?'rgba(20,80,40,.3)':'rgba(60,140,90,.3)'; X.lineWidth=sc*.012;
+  X.beginPath(); X.moveTo(-sc*.10,sc*.28); X.lineTo(-sc*.08,sc*.52); X.stroke();
+
+  // Right arm (guy's arm, raised, hand behind head)
+  X.strokeStyle=shirt2; X.lineWidth=sc*.09; X.lineCap='round';
+  X.beginPath(); X.moveTo(-sc*.44,sc*.34);
+  X.bezierCurveTo(-sc*.52,sc*.24,-sc*.56,sc*.14,-sc*.52,sc*.06); X.stroke();
+  X.fillStyle=skin; X.beginPath(); X.arc(-sc*.52,sc*.05,sc*.046,0,Math.PI*2); X.fill();
+
+  // Left arm (around girl)
+  X.beginPath(); X.moveTo(-sc*.44,sc*.42);
+  X.bezierCurveTo(-sc*.52,sc*.36,-sc*.52,sc*.28,-sc*.44,sc*.22); X.stroke();
+
+  // Neck (guy)
+  X.fillStyle=skin;
+  X.beginPath(); X.rect(-sc*.50,sc*.24,sc*.08,sc*.06); X.fill();
+
+  // Head (guy - lying, looking up slightly)
+  X.fillStyle=skin;
+  X.beginPath(); X.arc(-sc*.52, sc*.16, sc*.12, 0, Math.PI*2); X.fill();
+  // Ear (visible)
+  X.beginPath(); X.arc(-sc*.40,sc*.16,sc*.028,0,Math.PI*2); X.fill();
+  // Face (3/4 view looking up)
+  X.fillStyle=skinD;
+  X.beginPath(); X.arc(-sc*.52,sc*.20,sc*.08,0,Math.PI); X.fill();
+  // Eyes (open, looking up contentedly)
+  X.fillStyle='#1a0808';
+  X.beginPath(); X.arc(-sc*.56,sc*.13,sc*.016,0,Math.PI*2); X.fill();
+  X.beginPath(); X.arc(-sc*.47,sc*.13,sc*.016,0,Math.PI*2); X.fill();
+  X.fillStyle='white';
+  X.beginPath(); X.arc(-sc*.555,sc*.125,sc*.006,0,Math.PI*2); X.fill();
+  X.beginPath(); X.arc(-sc*.465,sc*.125,sc*.006,0,Math.PI*2); X.fill();
+  // Smile (happy, content)
+  X.strokeStyle='#8a4030'; X.lineWidth=sc*.014; X.lineCap='round';
+  X.beginPath(); X.arc(-sc*.52,sc*.16,sc*.048,0.2,Math.PI-0.2); X.stroke();
+  // Hair (short, dark)
+  X.fillStyle=hair1;
+  X.beginPath(); X.arc(-sc*.52,sc*.14,sc*.122,Math.PI*.65,Math.PI*2.1); X.fill();
+  X.beginPath(); X.moveTo(-sc*.63,sc*.14); X.bezierCurveTo(-sc*.63,sc*.04,-sc*.52,sc*0,-sc*.41,sc*.06); X.lineWidth=sc*.04; X.strokeStyle=hair1; X.stroke();
+
+  // ══ GIRL (lying on side, resting on guy's chest) ══
+  // Dress / body (angled across guy's torso)
+  X.fillStyle=dress2;
+  X.beginPath();
+  X.moveTo(-sc*.48,sc*.18);
+  X.bezierCurveTo(-sc*.46,sc*.10,-sc*.38,sc*.06,-sc*.24,sc*.06);
+  X.lineTo(sc*.06,sc*.08);
+  X.bezierCurveTo(sc*.08,sc*.14,sc*.06,sc*.30,-sc*.02,sc*.34);
+  X.lineTo(-sc*.34,sc*.38);
+  X.bezierCurveTo(-sc*.44,sc*.36,-sc*.50,sc*.28,-sc*.48,sc*.18);
+  X.fill();
+  // Dress fold/detail
+  X.fillStyle=night?'rgba(180,50,80,.4)':'rgba(255,120,150,.4)';
+  X.beginPath(); X.ellipse(-sc*.18,sc*.20,sc*.16,sc*.06,0.2,0,Math.PI*2); X.fill();
+
+  // Girl legs (bent, tucked behind)
+  X.fillStyle=dress2;
+  X.beginPath(); X.moveTo(-sc*.02,sc*.32);
+  X.bezierCurveTo(sc*.04,sc*.42,sc*.02,sc*.55,-sc*.06,sc*.60);
+  X.lineTo(-sc*.14,sc*.58);
+  X.bezierCurveTo(-sc*.08,sc*.52,-sc*.08,sc*.40,-sc*.10,sc*.34);
+  X.closePath(); X.fill();
+  // Foot
+  X.fillStyle='#1a1008';
+  X.beginPath(); X.ellipse(-sc*.08,sc*.61,sc*.06,sc*.028,-.2,0,Math.PI*2); X.fill();
+
+  // Girl arm (draped across guy's chest)
+  X.strokeStyle=skin; X.lineWidth=sc*.075; X.lineCap='round';
+  X.beginPath(); X.moveTo(-sc*.42,sc*.20);
+  X.bezierCurveTo(-sc*.32,sc*.16,-sc*.16,sc*.16, sc*.00,sc*.20); X.stroke();
+  X.fillStyle=skin;
+  X.beginPath(); X.arc(sc*.01,sc*.21,sc*.040,0,Math.PI*2); X.fill();
+
+  // Neck (girl)
+  X.fillStyle=skin;
+  X.beginPath(); X.rect(-sc*.30,sc*.04,sc*.07,sc*.06); X.fill();
+
+  // Head (girl — resting on chest, eyes closed, peaceful)
+  X.fillStyle=skin;
+  X.beginPath(); X.arc(-sc*.32, sc*-.04, sc*.11, 0, Math.PI*2); X.fill();
+  // Ear
+  X.beginPath(); X.arc(-sc*.22,sc*-.04,sc*.024,0,Math.PI*2); X.fill();
+  // Chin shadow
+  X.fillStyle=skinD;
+  X.beginPath(); X.arc(-sc*.32,sc*.00,sc*.07,0,Math.PI); X.fill();
+  // Eyes CLOSED (peaceful, sleeping-ish)
+  X.strokeStyle='#1a0808'; X.lineWidth=sc*.018; X.lineCap='round';
+  X.beginPath(); X.arc(-sc*.36,sc*-.06,sc*.026,0.1,Math.PI-0.1); X.stroke();
+  X.beginPath(); X.arc(-sc*.27,sc*-.06,sc*.026,0.1,Math.PI-0.1); X.stroke();
+  // Long eyelashes
+  X.lineWidth=sc*.012;
+  for(var el=0;el<3;el++){
+    var elx = -sc*.38 + el*sc*.03;
+    X.beginPath(); X.moveTo(elx,sc*-.084); X.lineTo(elx-sc*.008,sc*-.11); X.stroke();
+    var elx2 = -sc*.29 + el*sc*.03;
+    X.beginPath(); X.moveTo(elx2,sc*-.084); X.lineTo(elx2+sc*.008,sc*-.11); X.stroke();
+  }
+  // Tiny smile
+  X.strokeStyle='#8a4030'; X.lineWidth=sc*.013;
+  X.beginPath(); X.arc(-sc*.32,sc*-.02,sc*.036,0.3,Math.PI-0.3); X.stroke();
+  // Rosy cheeks
+  X.fillStyle='rgba(240,120,120,.28)';
+  X.beginPath(); X.ellipse(-sc*.38,sc*-.028,sc*.025,sc*.016,0,0,Math.PI*2); X.fill();
+  X.beginPath(); X.ellipse(-sc*.26,sc*-.028,sc*.025,sc*.016,0,0,Math.PI*2); X.fill();
+
+  // Hair (girl — long, spread out behind head)
+  X.fillStyle=hair2;
+  X.beginPath(); X.arc(-sc*.32,sc*-.05,sc*.115,Math.PI*.5,Math.PI*2.4); X.fill();
+  // Long hair spread
+  X.beginPath();
+  X.moveTo(-sc*.42,-sc*.12);
+  X.bezierCurveTo(-sc*.56,-sc*.08,-sc*.60,sc*.06,-sc*.56,sc*.20);
+  X.lineTo(-sc*.50,sc*.18);
+  X.bezierCurveTo(-sc*.52,sc*.06,-sc*.48,-sc*.04,-sc*.38,-sc*.09);
+  X.closePath(); X.fill();
+  // Hair strand
+  X.strokeStyle=hair2; X.lineWidth=sc*.055; X.lineCap='round';
+  X.beginPath(); X.moveTo(-sc*.24,-sc*.12);
+  X.bezierCurveTo(-sc*.18,-sc*.04,-sc*.16,sc*.08,-sc*.20,sc*.20); X.stroke();
+  // Hair highlight
+  X.strokeStyle='rgba(80,20,40,.3)'; X.lineWidth=sc*.022;
+  X.beginPath(); X.moveTo(-sc*.40,-sc*.11);
+  X.bezierCurveTo(-sc*.52,-sc*.05,-sc*.54,sc*.08,-sc*.50,sc*.18); X.stroke();
+
+  // ── PICNIC ITEMS ──
+  // Wicker basket
+  X.fillStyle=night?'rgba(110,70,25,.85)':'rgba(165,115,45,.90)';
+  X.beginPath(); X.ellipse(sc*.50,sc*.30,sc*.16,sc*.11,0,0,Math.PI*2); X.fill();
+  X.fillStyle=night?'rgba(85,52,18,.90)':'rgba(130,88,32,.95)';
+  X.beginPath(); X.moveTo(sc*.34,sc*.30); X.lineTo(sc*.34,sc*.36); X.lineTo(sc*.66,sc*.36); X.lineTo(sc*.66,sc*.30); X.closePath(); X.fill();
+  // Basket weave lines
+  X.strokeStyle=night?'rgba(60,38,12,.6)':'rgba(100,68,22,.5)'; X.lineWidth=sc*.012;
+  for(var bw=0;bw<3;bw++){
+    X.beginPath(); X.moveTo(sc*.36+bw*sc*.10,sc*.26); X.lineTo(sc*.36+bw*sc*.10,sc*.36); X.stroke();
+  }
+  X.beginPath(); X.moveTo(sc*.34,sc*.30); X.lineTo(sc*.66,sc*.30); X.stroke();
+  // Basket handle
+  X.strokeStyle=night?'rgba(90,58,20,.8)':'rgba(140,95,35,.85)'; X.lineWidth=sc*.028;
+  X.beginPath(); X.arc(sc*.50,sc*.26,sc*.13,Math.PI,0); X.stroke();
+  // Items peeking from basket
+  X.fillStyle='rgba(255,80,80,.8)'; // apple
+  X.beginPath(); X.arc(sc*.44,sc*.23,sc*.038,0,Math.PI*2); X.fill();
+  X.fillStyle='rgba(80,160,60,.7)'; // apple stem
+  X.beginPath(); X.moveTo(sc*.44,sc*.20); X.lineTo(sc*.44,sc*.16); X.lineWidth=sc*.010; X.strokeStyle='rgba(60,120,40,.8)'; X.stroke();
+
+  // Rose/flower on blanket
+  X.fillStyle='rgba(255,120,160,.9)';
+  X.beginPath(); X.arc(sc*.22,sc*.28,sc*.036,0,Math.PI*2); X.fill();
+  X.fillStyle='rgba(255,180,200,.7)';
+  X.beginPath(); X.arc(sc*.22,sc*.28,sc*.024,0,Math.PI*2); X.fill();
+  X.fillStyle='rgba(255,220,240,.9)';
+  X.beginPath(); X.arc(sc*.22,sc*.28,sc*.012,0,Math.PI*2); X.fill();
+  // Flower petals
+  X.fillStyle='rgba(255,140,170,.7)';
+  for(var fp=0;fp<5;fp++){
+    var fpa=fp/5*Math.PI*2;
+    X.beginPath(); X.arc(sc*.22+Math.cos(fpa)*sc*.038,sc*.28+Math.sin(fpa)*sc*.038,sc*.018,0,Math.PI*2); X.fill();
+  }
+
+  // Stars/sparkles near couple
+  X.fillStyle='rgba(255,220,240,.65)';
+  [[sc*.12,sc*-.18],[sc*-.10,sc*-.14],[sc*.30,sc*-.12]].forEach(function(s){
+    X.font=(sc*.12)+'px serif'; X.fillText('✦',s[0],s[1]);
+  });
+
+  X.restore();
+}
+
+// ── PETAL SPRITES ──────────────────────────────────────────────
+var PSIZES=[5,7,9,11];
+var PC=[['#ffd4e0','#ff9db8','#e8607e'],['#ffe8f0','#ffbed0','#ff96b2'],
+        ['#fff0f5','#ffd8e8','#ffb8d0'],['#fce4ec','#f8bbd0','#f48fb1'],
+        ['#ffecf0','#ffc8d8','#ff9ab5']];
+var pSprites=[];
+function buildPetalSprites(){
+  pSprites=[];
+  PC.forEach(function(col){
+    var cg=[];
+    PSIZES.forEach(function(s){
+      var dim=(s*2+8)*2, oc=document.createElement('canvas');
+      oc.width=oc.height=dim;
+      var ox=oc.getContext('2d'), cx=dim/2, cy=dim/2;
+      for(var p=0;p<5;p++){
+        ox.save(); ox.translate(cx,cy); ox.rotate(p/5*Math.PI*2);
+        var g=ox.createRadialGradient(0,-s*.38,0,0,-s*.38,s*.9);
+        g.addColorStop(0,col[0]); g.addColorStop(.55,col[1]); g.addColorStop(1,col[2]+'55');
+        ox.fillStyle=g; ox.beginPath(); ox.ellipse(0,-s*.55,s*.38,s*.7,0,0,Math.PI*2); ox.fill();
+        ox.restore();
+      }
+      ox.save(); ox.translate(cx,cy);
+      var cg2=ox.createRadialGradient(0,0,0,0,0,s*.2);
+      cg2.addColorStop(0,'#fff8e0'); cg2.addColorStop(1,'#ffd4b0');
+      ox.beginPath(); ox.arc(0,0,s*.2,0,Math.PI*2); ox.fillStyle=cg2; ox.fill();
+      ox.restore();
+      cg.push({canvas:oc,cx:cx,cy:cy});
+    });
+    pSprites.push(cg);
+  });
+}
+
+// ── FIREFLY SPRITES ────────────────────────────────────────────
+var ffSpr=[null,null];
+function buildFFSprites(){
+  [[255,230,160],[200,255,180]].forEach(function(c,i){
+    var oc=document.createElement('canvas'); oc.width=oc.height=40;
+    var ox=oc.getContext('2d');
+    var g=ox.createRadialGradient(20,20,0,20,20,18);
+    g.addColorStop(0,'rgba('+c[0]+','+c[1]+','+c[2]+',1)');
+    g.addColorStop(.35,'rgba('+c[0]+','+c[1]+','+c[2]+',.5)');
+    g.addColorStop(1,'transparent');
+    ox.fillStyle=g; ox.fillRect(0,0,40,40);
+    ox.fillStyle='rgba(255,255,240,.9)'; ox.beginPath(); ox.arc(20,20,2.2,0,Math.PI*2); ox.fill();
+    ffSpr[i]=oc;
+  });
+}
+
+// ── PETAL CLASS ────────────────────────────────────────────────
+function Petal(tree,burst){
+  var tip=tree.tips.length>0?tree.tips[Math.random()*tree.tips.length|0]:{x:tree.x,y:tree.forkY};
+  this.x=tip.x+(Math.random()-.5)*(burst?25:12);
+  this.y=tip.y+(Math.random()-.5)*(burst?20:8);
+  this.vx=(Math.random()-.5)*1.5+(windOn?windStr*.5:0);
+  this.vy=burst?(-1.8-Math.random()*2.5):(-.2+Math.random()*.9);
+  this.rot=Math.random()*Math.PI*2; this.rv=(Math.random()-.5)*.08;
+  this.ci=Math.random()*PC.length|0; this.si=Math.random()*PSIZES.length|0;
+  this.ph=Math.random()*Math.PI*2; this.wb=.014+Math.random()*.035;
+  this.life=0; this.gnd=false; this.gy=H*(.80+Math.random()*.12);
+}
+Petal.prototype.upd=function(){
+  if(this.gnd){this.life++;return;} this.life++;
+  if(windOn)this.vx+=windStr*.016;
+  this.vx+=Math.sin(this.life*this.wb+this.ph)*.030;
+  this.vy+=.033; this.vx*=.982; this.vy=Math.min(this.vy,3.5);
+  this.x+=this.vx; this.y+=this.vy;
+  this.rot+=this.rv+Math.sin(this.life*.033)*.010;
+  if(this.y>=this.gy){this.y=this.gy;this.gnd=true;this.vx=0;}
+  if(this.x<-50)this.x=W+50; if(this.x>W+50)this.x=-50;
+};
+Petal.prototype.alp=function(){
+  if(!this.gnd)return Math.min(this.life/18,1);
+  var f=(this.life-45)/250; return f>0?Math.max(1-f,0):1;
+};
+Petal.prototype.draw=function(){
+  var a=this.alp(); if(a<.02)return;
+  var sp=pSprites[this.ci][this.si];
+  X.save(); X.translate(this.x,this.y); X.rotate(this.rot);
+  X.globalAlpha=a; X.drawImage(sp.canvas,-sp.cx,-sp.cy); X.restore();
+};
+Petal.prototype.dead=function(){return this.gnd&&this.alp()<.015;};
+
+// ── FIREFLY CLASS ──────────────────────────────────────────────
+function Firefly(){
+  var tree=trees[Math.random()*trees.length|0];
+  var cy=tree.forkY - tree.r*.35;
+  this.tx=tree.x; this.cy=cy; this.tr=tree.r;
+  this.oR=tree.r*(.25+Math.random()*.85);
+  this.oA=Math.random()*Math.PI*2;
+  this.oS=(Math.random()<.5?1:-1)*(.006+Math.random()*.011);
+  this.bp=Math.random()*Math.PI*2; this.ba=6+Math.random()*16;
+  this.x=this.tx+Math.cos(this.oA)*this.oR;
+  this.y=cy+Math.sin(this.bp)*this.ba;
+  this.vx=0; this.vy=0;
+  this.life=0; this.max=220+Math.random()*320;
+  this.ph=Math.random()*Math.PI*2; this.si=Math.random()<.5?0:1;
+}
+Firefly.prototype.upd=function(){
+  this.life++; this.oA+=this.oS;
+  var tx2=this.tx+Math.cos(this.oA)*this.oR;
+  var ty2=this.cy+Math.sin(this.oA*.5+this.bp)*this.ba;
+  if(windOn){this.vx+=windStr*.05;this.vy+=(Math.random()-.5)*.07;}
+  else{this.vx+=(tx2-this.x)*.038;this.vy+=(ty2-this.y)*.038;}
+  this.vx*=.90; this.vy*=.90;
+  this.x+=this.vx; this.y+=this.vy;
+  if(this.x>W+60)this.x=-60; if(this.x<-60)this.x=W+60;
+};
+Firefly.prototype.alp=function(){var f=this.life/this.max;return Math.sin(f*Math.PI)*(night?.88:.30);};
+Firefly.prototype.draw=function(){
+  var a=this.alp(); if(a<.02)return;
+  var pulse=.6+.4*Math.sin(this.life*.08+this.ph);
+  X.save(); X.globalAlpha=a; X.translate(this.x,this.y); X.scale(pulse*.7,pulse*.7);
+  X.drawImage(ffSpr[this.si],-20,-20); X.restore();
+};
+Firefly.prototype.dead=function(){return this.life>=this.max;};
+
+// ── SCENE BUILD ────────────────────────────────────────────────
+function buildScene(){
+  trees=[];
+  var configs=[
+    {f:.06,s:.70,tk:.20},{f:.25,s:.86,tk:.23},
+    {f:.50,s:1.0,tk:.26},
+    {f:.75,s:.88,tk:.22},{f:.94,s:.72,tk:.19}
+  ];
+  configs.forEach(function(p,i){
+    var tx=W*p.f, ty=H*(0.77+0.03*(i%2==0?0:1));
+    var tree=makeTree(tx,ty,p.s,i*7+13);
+    bakeTree(tree);
+    trees.push(tree);
+  });
+  buildPetalSprites();
+  buildFFSprites();
+}
+
+// ── HELPERS ────────────────────────────────────────────────────
+function spawnHeart(x,y){
+  var el=document.createElement('div'); el.className='fh';
+  el.style.left=x+'px'; el.style.top=y+'px';
+  el.textContent=['🌸','💕','✿','♡','🌷'][Math.random()*5|0];
+  document.body.appendChild(el); setTimeout(function(){el.remove();},2500);
+}
+function markStarted(){
+  if(!started){
+    started=true;
+    document.getElementById('ctr').classList.add('show');
+    setTimeout(function(){document.getElementById('ribbon').classList.add('show');},2600);
+  }
+}
+function doPetals(ti,count,burst){
+  markStarted();
+  var tree=trees[ti!=null?ti:Math.random()*trees.length|0];
+  for(var i=0;i<count;i++)petals.push(new Petal(tree,burst));
+  total+=count; if(petals.length>700)petals.splice(0,petals.length-700);
+  document.getElementById('cnt').textContent=total.toLocaleString();
+}
+function doAll(count,burst){for(var i=0;i<trees.length;i++)doPetals(i,count,burst);}
+
+// ── DRAW TREE FROM CACHE ────────────────────────────────────────
+function drawTree(tree){
+  var dx=0;
+  if(tree.sh>.03){dx=tree.sh*Math.sin(Date.now()*.044)*5;tree.sh*=tree.sd;if(tree.sh<.016)tree.sh=0;}
+  X.drawImage(tree.oc, tree.x-tree.lx+dx, tree.y-tree.ly);
+}
+
+// ── MAIN LOOP ──────────────────────────────────────────────────
+var bgCache=null, bgDirty=true, bgNight=null;
+function loop(){
+  requestAnimationFrame(loop); t++;
+  if(windOn)windStr+=(windTarget-windStr)*.04; else windStr*=.90;
+  if(windStr<.01)windStr=0;
+
+  // BG cache
+  if(bgDirty || bgNight!==night){
+    if(!bgCache)bgCache=document.createElement('canvas');
+    bgCache.width=W; bgCache.height=H;
+    var bx2=bgCache.getContext('2d');
+    // Draw bg to offscreen
+    var _X=X; X=bx2; drawBg(); X=_X;
+    bgDirty=false; bgNight=night;
+  }
+  X.drawImage(bgCache,0,0);
+
+  // Trees back-to-front
+  drawTree(trees[0]); drawTree(trees[4]);
+  drawTree(trees[1]); drawTree(trees[3]);
+  drawTree(trees[2]);
+
+  // Fireflies
+  if(t%12===0&&flies.length<(night?36:16))flies.push(new Firefly());
+  var lf=[],lp=[];
+  for(var i=0;i<flies.length;i++){flies[i].upd();flies[i].draw();if(!flies[i].dead())lf.push(flies[i]);}
+  flies=lf;
+  for(var j=0;j<petals.length;j++){petals[j].upd();petals[j].draw();if(!petals[j].dead())lp.push(petals[j]);}
+  petals=lp;
+
+  // Auto-drip
+  if(windOn&&windStr>1&&t%28===0)doAll(2+(windStr|0),false);
+
+  // Wind streamers
+  if(windOn&&windStr>.5){
+    X.save(); X.globalAlpha=Math.min(windStr/4,1)*(.022+.015*Math.sin(t*.07));
+    X.fillStyle=night?'rgba(200,170,255,1)':'rgba(255,175,215,1)';
+    for(var wi=0;wi<4;wi++){
+      var wx=((t*windStr*1.1+wi*(W/4))%W+W)%W;
+      var wy=H*.05+Math.sin(t*.022+wi*1.3)*H*.36;
+      X.beginPath(); X.ellipse(wx,wy,66+wi*10,2+wi*.3,0,0,Math.PI*2); X.fill();
+    }
+    X.restore();
+  }
+
+  // Cursor
+  document.getElementById('cur').style.left=mx+'px';
+  document.getElementById('cur').style.top=my+'px';
+}
+
+// ── HIT TEST ───────────────────────────────────────────────────
+function onTree(x,y,tree){
+  var left=tree.x-tree.r*1.3, right=tree.x+tree.r*1.3;
+  var top=tree.forkY-tree.r, bot=tree.y;
+  var onTrunk=x>tree.x-tree.trunkW&&x<tree.x+tree.trunkW&&y>tree.forkY&&y<tree.y;
+  return onTrunk||(x>left&&x<right&&y>top&&y<bot);
+}
+
+window.addEventListener('pointerdown',function(e){
+  if(e.target.closest('#controls')||e.target.closest('#ln'))return;
+  var hit=-1;
+  trees.forEach(function(tree,i){if(onTree(e.clientX,e.clientY,tree))hit=i;});
+  if(hit>=0){trees[hit].sh=1.2;doPetals(hit,26+(Math.random()*14|0),false);}
+  else{var nd=Infinity,ni=0;trees.forEach(function(tr,i){var d=Math.hypot(e.clientX-tr.x,e.clientY-tr.y);if(d<nd){nd=d;ni=i;}});doPetals(ni,7+(Math.random()*5|0),false);}
+  if(Math.random()<.14)spawnHeart(e.clientX-7,e.clientY-7);
+});
+
+// ── CONTROLS ───────────────────────────────────────────────────
+document.getElementById('bcl').addEventListener('click',function(){
+  petals=[];flies=[];total=0;document.getElementById('cnt').textContent='0';
+  windOn=false;windStr=0;windTarget=0;clearInterval(gustInt);
+  document.getElementById('bwn').classList.remove('on');
+  document.getElementById('bwn').textContent='🌬 Wind';
+  document.getElementById('wbar').classList.remove('show');
+});
+document.getElementById('bwn').addEventListener('click',function(){
+  windOn=!windOn;
+  if(windOn){
+    windTarget=2.6+Math.random()*2.4;windStr=.1;
+    this.classList.add('on');this.textContent='🌬 Stop Wind';
+    document.getElementById('wbar').classList.add('show');markStarted();
+    gustInt=setInterval(function(){if(windOn)windTarget=2+Math.random()*3;},4000);
+  } else {
+    clearInterval(gustInt);windTarget=0;
+    this.classList.remove('on');this.textContent='🌬 Wind';
+    document.getElementById('wbar').classList.remove('show');
+  }
+});
+document.getElementById('bsh').addEventListener('click',function(){
+  markStarted(); trees.forEach(function(tr){tr.sh=1.6;});
+  for(var i=0;i<9;i++)(function(ii){setTimeout(function(){doAll(16,ii>6);},ii*55);})(i);
+  setTimeout(function(){for(var h=0;h<6;h++)(function(hh){setTimeout(function(){var tr=trees[Math.random()*trees.length|0];spawnHeart(tr.x+(Math.random()-.5)*160,tr.forkY-tr.r*.4);},hh*90);})(h);},200);
+  if(!noteShown){noteShown=true;setTimeout(function(){document.getElementById('ln').classList.add('show');},3200);}
+});
+document.getElementById('bng').addEventListener('click',function(){
+  night=!night; bgDirty=true;
+  // Rebake trees for new lighting
+  trees.forEach(function(tr){bakeTree(tr);});
+  this.textContent=night?'☀️ Day':'🌙 Night';
+});
+document.getElementById('bnt').addEventListener('click',function(){document.getElementById('ln').classList.add('show');});
+document.getElementById('lnc').addEventListener('click',function(){document.getElementById('ln').classList.remove('show');});
+
+var la={x:0,y:0,z:0};
+window.addEventListener('devicemotion',function(e){
+  var a=e.accelerationIncludingGravity;if(!a)return;
+  var d=Math.abs(a.x-la.x)+Math.abs(a.y-la.y)+Math.abs(a.z-la.z);
+  if(d>16){trees.forEach(function(tr){tr.sh=1.3;});doAll(25,true);}
+  la={x:a.x,y:a.y,z:a.z};
+});
+
+resize(); loop();
+</script>
+</body>
+</html>

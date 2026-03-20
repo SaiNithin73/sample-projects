@@ -1,0 +1,143 @@
+*{margin:0;padding:0;box-sizing:border-box;user-select:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#f5dce6;cursor:none}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+
+#cur{
+  position:fixed;pointer-events:none;z-index:9999;
+  font-size:18px;line-height:1;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 6px rgba(230,80,140,.85));
+  will-change:left,top;
+}
+
+/* ── UI layer ── */
+#ui{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+#tc{
+  position:absolute;top:clamp(12px,2.8vh,36px);left:0;right:0;
+  text-align:center;
+  transition:opacity 1.4s ease,transform 1.4s ease;
+}
+#tc.gone{opacity:0;transform:translateY(-22px);pointer-events:none}
+.krow{
+  font-family:'Noto Serif JP',serif;font-weight:200;
+  font-size:11px;letter-spacing:.5em;color:rgba(200,100,140,.35);margin-bottom:3px;
+}
+#tc h1{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(22px,4.8vw,50px);color:#c2456b;
+  text-shadow:0 3px 20px rgba(200,70,120,.18);
+}
+#tc h1 em{font-family:'Pinyon Script',cursive;font-size:1.28em;font-style:normal;color:#e8789a}
+.sub{
+  font-family:'Raleway',sans-serif;font-weight:200;
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(140,50,90,.48);margin-top:3px;
+}
+.hint{
+  font-family:'Raleway',sans-serif;font-weight:200;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(200,100,140,.38);margin-top:7px;
+  animation:bth 2.8s ease-in-out infinite;
+}
+
+#ribbon{
+  position:absolute;bottom:74px;left:50%;transform:translateX(-50%);
+  font-family:'Pinyon Script',cursive;font-size:clamp(16px,2.4vw,24px);
+  color:rgba(190,80,120,.42);white-space:nowrap;
+  opacity:0;transition:opacity 1.2s;
+  text-shadow:0 2px 8px rgba(230,100,150,.2);
+}
+#ribbon.show{opacity:1}
+
+#ctr{
+  position:absolute;top:14px;right:16px;
+  font-family:'Raleway',sans-serif;font-weight:200;
+  font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(180,80,120,.44);opacity:0;transition:opacity .6s;text-align:right;
+}
+#ctr.show{opacity:1}
+#ctr strong{font-size:15px;color:#e8789a;font-weight:300}
+
+#wbar{
+  position:absolute;top:14px;left:16px;
+  font-family:'Raleway',sans-serif;font-weight:200;
+  font-size:10px;letter-spacing:.13em;color:rgba(180,80,120,.44);
+  opacity:0;transition:opacity .4s;
+}
+#wbar.show{opacity:1}
+
+#season{
+  position:absolute;bottom:18px;left:16px;
+  font-family:'Noto Serif JP',serif;font-weight:200;
+  font-size:clamp(24px,4.5vw,48px);color:rgba(200,120,160,.07);
+  writing-mode:vertical-rl;pointer-events:none;
+}
+
+/* ── Buttons ── */
+#controls{
+  position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+  display:flex;gap:7px;z-index:300;pointer-events:auto;
+  flex-wrap:wrap;justify-content:center;
+}
+.btn{
+  font-family:'Raleway',sans-serif;font-weight:300;
+  font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  padding:8px 16px;border:none;cursor:pointer;
+  border-radius:24px;transition:background .2s,box-shadow .2s;
+  backdrop-filter:blur(8px);
+}
+.bs{background:rgba(255,255,255,.48);color:rgba(150,50,90,.74);border:1px solid rgba(210,120,160,.18)}
+.bs:hover{background:rgba(255,215,228,.72)}
+.br{background:rgba(235,108,148,.13);color:rgba(168,40,80,.88);border:1px solid rgba(215,90,138,.24)}
+.br:hover{background:rgba(235,108,148,.26)}
+.br.on{background:rgba(98,152,255,.13);color:rgba(65,105,215,.9);border-color:rgba(115,152,255,.34);animation:bth 1.2s ease-in-out infinite}
+.bx{background:rgba(235,168,110,.14);color:rgba(145,60,20,.78);border:1px solid rgba(215,148,90,.24)}
+.bx:hover{background:rgba(235,168,110,.3)}
+
+@keyframes bth{0%,100%{opacity:1}50%{opacity:.36}}
+
+/* ── Floating heart ── */
+.fh{
+  position:fixed;pointer-events:none;z-index:50;font-size:12px;
+  animation:fhu 2.4s ease-out forwards;
+}
+@keyframes fhu{
+  0%{opacity:0;transform:translateY(0) scale(.35)}
+  18%{opacity:.68;transform:translateY(-14px) scale(1)}
+  78%{opacity:.28;transform:translateY(-65px)}
+  100%{opacity:0;transform:translateY(-100px) scale(.45)}
+}
+
+/* ── Love note modal ── */
+#ln{
+  position:fixed;inset:0;z-index:500;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .65s;
+  background:rgba(180,60,100,.04);
+}
+#ln.show{opacity:1;pointer-events:auto}
+#lni{
+  background:rgba(255,247,251,.94);
+  border:1px solid rgba(218,142,172,.24);
+  border-radius:5px;
+  padding:clamp(18px,3.5vw,42px) clamp(22px,4.5vw,56px);
+  text-align:center;
+  box-shadow:0 14px 44px rgba(192,68,128,.09);
+  max-width:min(450px,90vw);
+  backdrop-filter:blur(14px);
+}
+#lni h2{font-family:'Pinyon Script',cursive;font-size:clamp(26px,5vw,46px);color:#c2456b;margin-bottom:10px}
+#lni p{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(12px,1.7vw,14.5px);color:rgba(128,44,82,.74);
+  line-height:1.82;margin-bottom:5px;
+}
+.sig{font-family:'Pinyon Script',cursive;font-size:clamp(17px,2.4vw,24px);color:#e8789a;margin-top:10px}
+#lnc{
+  margin-top:14px;font-family:'Raleway',sans-serif;font-weight:200;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(168,68,108,.54);border:1px solid rgba(188,88,128,.15);
+  background:transparent;padding:6px 18px;border-radius:14px;cursor:pointer;transition:all .2s;
+}
+#lnc:hover{background:rgba(232,168,192,.18);color:#c2456b}
